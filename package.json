@@ -1,0 +1,33 @@
+{
+  "dependencies": {
+    "commander": "^9.2.0",
+    "jest": "^28.1.0",
+    "lodash": "^4.17.21"
+  },
+  "name": "@hexlet/code",
+  "description": "[![Actions Status](https://github.com/userao/frontend-project-lvl2/workflows/hexlet-check/badge.svg)](https://github.com/userao/frontend-project-lvl2/actions)",
+  "version": "1.0.0",
+  "main": "gendiff.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "gendiff": "./gendiff.js"
+  },
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/userao/frontend-project-lvl2.git"
+  },
+  "author": "Andrey O",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/userao/frontend-project-lvl2/issues"
+  },
+  "homepage": "https://github.com/userao/frontend-project-lvl2#readme",
+  "devDependencies": {
+    "eslint": "^8.16.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.26.0"
+  }
+}
