@@ -7,12 +7,12 @@
   "name": "@hexlet/code",
   "description": "[![Actions Status](https://github.com/userao/frontend-project-lvl2/workflows/hexlet-check/badge.svg)](https://github.com/userao/frontend-project-lvl2/actions)",
   "version": "1.0.0",
-  "main": "gendiff.js",
+  "main": "/src/utils.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": {
-    "gendiff": "./gendiff.js"
+    "gendiff": "/bin/gendiff.js"
   },
   "type": "module",
   "repository": {

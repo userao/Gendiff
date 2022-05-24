@@ -1,7 +1,5 @@
-#!/usr/bin/env node
 import _ from 'lodash';
 import { readFileSync } from 'node:fs';
-import { program } from 'commander';
 
 const dataToText = (code) => {
   const dataArray = JSON.parse(code).data;
@@ -33,18 +31,5 @@ const genDiff = (path1, path2) => {
 
   return `{\n${string}}`;
 };
-
-program
-  .argument('<filepath1>')
-  .argument('<filepath2>')
-  .name('gendiff')
-  .description('Compares two configuration files and shows a difference.')
-  .version('0.0.1')
-  .option('-f, --format <type>', 'output format')
-  .parse();
-
-const { args } = program;
-const [filepath1, filepath2] = args;
-console.log(genDiff(filepath1, filepath2));
 
 export default genDiff;
