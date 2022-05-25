@@ -1,0 +1,15 @@
+name: Code tests and linter check
+
+on: push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: installing packages
+        run: make install-packages
+      - name: linter check
+        run: make lint
+      - name: testing code
+        run: make test
