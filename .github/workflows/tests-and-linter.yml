@@ -2,51 +2,27 @@ name: Code tests and linter check
 
 on: push
 
-# jobs:
-#   build:
-#     runs-on: ubuntu-latest
-#     steps:
-#       - uses: actions/checkout@v2
-#       - name: installing packages
-#         run: make install-packages
-#       - name: linter check
-#         run: make lint
-#       - name: testing code
-#         run: make test
-#       - name: Test & publish code coverage
-#           uses: paambaati/codeclimate-action@v3.0.0
-#           env:
-#             CC_TEST_REPORTER_ID: ${{ secrets.CC_REPORTER_ID }}
-#           with:
-#           coverageCommand: make test-coverage
-#           debug: true
-
-env:
-  CI: true
-
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [14.x]
-
     steps:
-      - uses: actions/checkout@v2
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'npm'
-      - run: make install-packages
-      - run: make lint
-      - run: make test
-      - name: Test & publish code coverage
-        uses: paambaati/codeclimate-action@v3
+      - uses: actions/checkout@v3
+
+      - name: installing packages
+        run: make install-packages
+
+      - name: linter check
+        run: make lint
+
+      - name: testing code
+        run: make test
+
+      - name: check coverage
+        run: make test-coverage
+
+      - name: publish code coverage
+        uses: paambaati/codeclimate-action@v3.0.0
         env:
-          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+          CC_TEST_REPORTER_ID: ${{ secrets.CC_REPORTER_ID }}
         with:
-          coverageCommand: make test-coverage
           debug: true
