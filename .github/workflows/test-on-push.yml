@@ -2,16 +2,11 @@ name: Test on push
 
 on: push
 
-env:
-  CI: true
-
 jobs:
   build:
     runs-on: ubuntu-latest
-     steps:
-      - name: installing packages
-        run: make install-packages
-      - name: linter check
-        run: make lint
-      - name: code tests
-        run: make test
+    steps:
+      - uses: actions/checkout@v2
+      - run: make install-packages
+      - run: make lint
+      - run: make test
