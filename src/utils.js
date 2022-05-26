@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import { readFileSync } from 'node:fs';
+import fs from 'fs';
 import { cwd } from 'node:process';
 import * as path from 'node:path';
 
@@ -7,10 +7,13 @@ const genDiff = (path1, path2) => {
   const workingDir = cwd();
   const resolvedPath1 = path.resolve(workingDir, path1);
   const resolvedPath2 = path.resolve(workingDir, path2);
-  const dataString1 = readFileSync(resolvedPath1, 'utf-8');
-  const dataString2 = readFileSync(resolvedPath2, 'utf-8');
-  const object1 = JSON.parse(dataString1);
-  const object2 = JSON.parse(dataString2);
+  const dataString1 = fs.readFileSync(resolvedPath1, 'utf-8');
+  const dataString2 = fs.readFileSync(resolvedPath2, 'utf-8');
+  if (dataString1 === dataString2 && dataString1 === '') {
+    return '{}';
+  }
+  const object1 = dataString1 === '' ? {} : JSON.parse(dataString1);
+  const object2 = dataString2 === '' ? {} : JSON.parse(dataString2);
   const allKeys = _.union(Object.keys(object1), Object.keys(object2));
   const sortedKeys = _.sortBy(allKeys);
 
