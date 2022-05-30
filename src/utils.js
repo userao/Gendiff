@@ -18,7 +18,6 @@ const createObjectOfDifs = (firstObject, secondObject) => {
       }
 
       if (_.isObject(firstValue) && _.isObject(secondValue)) {
-        // console.log(firstValue, secondValue);
         return { ...acc, [key]: ['both', createObjectOfDifs(firstValue, secondValue)] };
       }
 
@@ -52,7 +51,6 @@ const genDiff = (path1, path2, formatterType = 'stylish') => {
   const object2 = dataString2 === '' ? {} : parser(dataString2, extension2);
 
   const differencesObject = createObjectOfDifs(object1, object2);
-  console.log(JSON.stringify(differencesObject, null, 2));
   return formatterType === 'stylish' ? stylish(differencesObject) : console.log('Only stylish for now');
 
   // const allKeys = _.union(Object.keys(object1), Object.keys(object2));
