@@ -52,26 +52,6 @@ const genDiff = (path1, path2, formatterType = 'stylish') => {
 
   const differencesObject = createObjectOfDifs(object1, object2);
   return formatterType === 'stylish' ? stylish(differencesObject) : console.log('Only stylish for now');
-
-  // const allKeys = _.union(Object.keys(object1), Object.keys(object2));
-  // const sortedKeys = _.sortBy(allKeys);
-
-  // const string = sortedKeys.reduce((acc, key) => {
-  //   if (Object.hasOwn(object1, key) && !Object.hasOwn(object2, key)) {
-  //     return `${acc} - ${key}: ${object1[key]}\n`;
-  //   }
-  //   if (Object.hasOwn(object2, key) && !Object.hasOwn(object1, key)) {
-  //     return `${acc} + ${key}: ${object2[key]}\n`;
-  //   }
-  //   if (Object.hasOwn(object2, key) && Object.hasOwn(object1, key)) {
-  //     if (object1[key] !== object2[key]) {
-  //       return `${acc} - ${key}: ${object1[key]}\n + ${key}: ${object2[key]}\n`;
-  //     }
-  //   }
-  //   return `${acc}   ${key}: ${object1[key]}\n`;
-  // }, '');
-
-  // return `{\n${string}}`;
 };
 
 export default genDiff;

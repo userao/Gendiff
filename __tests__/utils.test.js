@@ -9,7 +9,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', filename);
 
-describe('Comparing plain objects', () => {
+describe('Comparing recursive objects', () => {
   test('parser', () => {
     expect(() => parser('', '.html')).toThrow(Error);
   });
@@ -23,21 +23,6 @@ describe('Comparing plain objects', () => {
     const expectedPath1 = getFixturePath('expectedRecursive1');
     const expected1 = fs.readFileSync(expectedPath1, 'utf-8');
     expect(actual1).toEqual(expected1);
-
-    // const actual2 = genDiff(firstPath, pathToEmpty);
-    // const expectedPath2 = getFixturePath('expectedPlain2');
-    // const expected2 = fs.readFileSync(expectedPath2, 'utf-8');
-    // expect(actual2).toEqual(expected2);
-
-    // const actual3 = genDiff(pathToEmpty, firstPath);
-    // const expectedPath3 = getFixturePath('expectedPlain3');
-    // const expected3 = fs.readFileSync(expectedPath3, 'utf-8');
-    // expect(actual3).toEqual(expected3);
-
-    // const actual4 = genDiff(firstPath, firstPath);
-    // const expectedPath4 = getFixturePath('expectedPlain4');
-    // const expected4 = fs.readFileSync(expectedPath4, 'utf-8');
-    // expect(actual4).toEqual(expected4);
 
     const actual5 = genDiff(pathToEmpty, pathToEmpty);
     expect(actual5).toEqual('{}');
@@ -53,20 +38,10 @@ describe('Comparing plain objects', () => {
     const expected1 = fs.readFileSync(expectedPath1, 'utf-8');
     expect(actual1).toEqual(expected1);
 
-    // const actual2 = genDiff(firstPath, pathToEmpty);
-    // const expectedPath2 = getFixturePath('expectedPlain2');
+    // const actual2 = genDiff(firstPath, firstPath);
+    // const expectedPath2 = getFixturePath('expectedRecursive1');
     // const expected2 = fs.readFileSync(expectedPath2, 'utf-8');
     // expect(actual2).toEqual(expected2);
-
-    // const actual3 = genDiff(pathToEmpty, firstPath);
-    // const expectedPath3 = getFixturePath('expectedPlain3');
-    // const expected3 = fs.readFileSync(expectedPath3, 'utf-8');
-    // expect(actual3).toEqual(expected3);
-
-    // const actual4 = genDiff(firstPath, firstPath);
-    // const expectedPath4 = getFixturePath('expectedPlain4');
-    // const expected4 = fs.readFileSync(expectedPath4, 'utf-8');
-    // expect(actual4).toEqual(expected4);
 
     const actual5 = genDiff(pathToEmpty, pathToEmpty);
     expect(actual5).toEqual('{}');
