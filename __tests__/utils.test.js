@@ -24,6 +24,16 @@ describe('Comparing recursive objects', () => {
     const expected1 = fs.readFileSync(expectedPath1, 'utf-8');
     expect(actual1).toEqual(expected1);
 
+    const actual2 = genDiff(firstPath, firstPath);
+    const expectedPath2 = getFixturePath('expectedRecursive2');
+    const expected2 = fs.readFileSync(expectedPath2, 'utf-8');
+    expect(actual2).toEqual(expected2);
+
+    const actual3 = genDiff(firstPath, pathToEmpty);
+    const expectedPath3 = getFixturePath('expectedRecursive3');
+    const expected3 = fs.readFileSync(expectedPath3, 'utf-8');
+    expect(actual3).toEqual(expected3);
+
     const actual5 = genDiff(pathToEmpty, pathToEmpty);
     expect(actual5).toEqual('{}');
   });
@@ -38,10 +48,15 @@ describe('Comparing recursive objects', () => {
     const expected1 = fs.readFileSync(expectedPath1, 'utf-8');
     expect(actual1).toEqual(expected1);
 
-    // const actual2 = genDiff(firstPath, firstPath);
-    // const expectedPath2 = getFixturePath('expectedRecursive1');
-    // const expected2 = fs.readFileSync(expectedPath2, 'utf-8');
-    // expect(actual2).toEqual(expected2);
+    const actual2 = genDiff(firstPath, firstPath);
+    const expectedPath2 = getFixturePath('expectedRecursive2');
+    const expected2 = fs.readFileSync(expectedPath2, 'utf-8');
+    expect(actual2).toEqual(expected2);
+
+    const actual3 = genDiff(firstPath, pathToEmpty);
+    const expectedPath3 = getFixturePath('expectedRecursive3');
+    const expected3 = fs.readFileSync(expectedPath3, 'utf-8');
+    expect(actual3).toEqual(expected3);
 
     const actual5 = genDiff(pathToEmpty, pathToEmpty);
     expect(actual5).toEqual('{}');

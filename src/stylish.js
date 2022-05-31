@@ -30,27 +30,31 @@ const stringify = (value, replacer = ' ', spacesCount = 1) => {
 };
 
 const stylish = (objectOfDifferences) => {
-  const iter = (currentObject, depth = 0) => {
+  const iter = (currentObject) => {
     const entries = Object.entries(currentObject);
-    const formattedObject = entries.reduce((differences, [key, [location, ...values]]) => {
-      if (location === 'first') {
-        return { ...differences, [`- ${key}`]: values[0] };
-      }
-      if (location === 'second') {
-        return { ...differences, [`+ ${key}`]: values[0] };
-      }
-      if (location === 'both') {
-        if (values.length === 2) {
-          if (!_.isEqual(values[0], values[1])) {
-            return { ...differences, [`- ${key}`]: values[0], [`+ ${key}`]: values[1] };
+    const formattedObject = entries
+      .reduce((differences, entry) => {
+        if (!Array.isArray(entry[1])) return { ...differences, [entry[0]]: entry[1] };
+        const [key, [location, firstValue, secondValue]] = entry;
+        if (location === 'first') {
+          return { ...differences, [`- ${key}`]: firstValue };
+        }
+        if (location === 'second') {
+          return { ...differences, [`+ ${key}`]: firstValue };
+        }
+        if (location === 'both') {
+          if (secondValue !== undefined) {
+            if (!_.isEqual(firstValue, secondValue)) {
+              return { ...differences, [`- ${key}`]: firstValue, [`+ ${key}`]: secondValue };
+            }
+          }
+          if (typeof firstValue === 'object') {
+            const res = { ...differences, [key]: iter(firstValue) };
+            return res;
           }
         }
-        if (_.isObject(values[0])) {
-          return { ...differences, [key]: iter(values[0], depth + 1) };
-        }
-      }
-      return { ...differences, [key]: values[0] };
-    }, {});
+        return { ...differences, [key]: firstValue };
+      }, {});
     return formattedObject;
   };
 
