@@ -44,13 +44,10 @@ const stylish = (objectOfDifferences) => {
         }
         if (location === 'both') {
           if (secondValue !== undefined) {
-            if (!_.isEqual(firstValue, secondValue)) {
-              return { ...differences, [`- ${key}`]: firstValue, [`+ ${key}`]: secondValue };
-            }
+            return { ...differences, [`- ${key}`]: firstValue, [`+ ${key}`]: secondValue };
           }
           if (typeof firstValue === 'object') {
-            const res = { ...differences, [key]: iter(firstValue) };
-            return res;
+            return { ...differences, [key]: iter(firstValue) };
           }
         }
         return { ...differences, [key]: firstValue };

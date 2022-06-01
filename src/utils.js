@@ -3,7 +3,7 @@ import fs from 'fs';
 import { cwd } from 'node:process';
 import * as path from 'node:path';
 import parser from './parsers.js';
-import stylish from './stylish.js';
+import format from '../formatters/index.js';
 
 const createObjectOfDifs = (firstObject, secondObject) => {
   const keysOfFirst = Object.keys(firstObject);
@@ -50,8 +50,8 @@ const genDiff = (path1, path2, formatterType = 'stylish') => {
   const object1 = dataString1 === '' ? {} : parser(dataString1, extension1);
   const object2 = dataString2 === '' ? {} : parser(dataString2, extension2);
 
-  const differencesObject = createObjectOfDifs(object1, object2);
-  return formatterType === 'stylish' ? stylish(differencesObject) : console.log('Only stylish for now');
+  const differences = createObjectOfDifs(object1, object2);
+  return format(differences, formatterType);
 };
 
 export default genDiff;
