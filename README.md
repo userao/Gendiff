@@ -8,3 +8,5 @@
 
 ### ASCIINEMAS
 * Comparison of plain objects: https://asciinema.org/a/Eo7lEjnGq2ADu05w3TocM38h4
+* Comparison of resursive objects with stylish formatter: https://asciinema.org/a/Nf4hWkeaS1xqMR7q039KzXvak
+* Comparison of resursive objects with plain formatter: https://asciinema.org/a/DgmB1W2V6vYbQ1icLhnm9u4u6
