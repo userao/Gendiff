@@ -94,3 +94,26 @@ describe('Plain formatter', () => {
     expect(actual4).toEqual('{}');
   });
 });
+
+describe('json formater', () => {
+  const expectedPath1 = getFixturePath('expectedJson1');
+  const expected1 = fs.readFileSync(expectedPath1, 'utf-8');
+  // const expectedPath2 = getFixturePath('expectedPlain2');
+  // const expected2 = fs.readFileSync(expectedPath2, 'utf-8');
+
+  test('json', () => {
+    const firstPath = getFixturePath('json/recursiveObj1.json');
+    const secondPath = getFixturePath('json/recursiveObj2.json');
+
+    const actual1 = genDiff(firstPath, secondPath, 'json');
+    expect(actual1).toEqual(expected1);
+  });
+
+  test('yaml', () => {
+    const firstPath = getFixturePath('yaml/recursiveObj1.yml');
+    const secondPath = getFixturePath('yaml/recursiveObj2.yaml');
+
+    const actual1 = genDiff(firstPath, secondPath, 'json');
+    expect(actual1).toEqual(expected1);
+  });
+});
