@@ -4,6 +4,7 @@ import * as path from 'node:path';
 import fs from 'fs';
 import genDiff from '../src/utils.js';
 import parser from '../src/parsers.js';
+import index from '../formatters/index.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -11,7 +12,11 @@ const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', 
 const pathToEmpty = getFixturePath('json/emptyObj.json');
 
 test('parser', () => {
-  expect(() => parser('', '.html')).toThrow(Error);
+  expect(() => parser({}, 'aboba')).toThrow(Error);
+});
+
+test('index', () => {
+  expect(() => index('', '.html')).toThrow(Error);
 });
 
 describe('Stylish formatter', () => {
@@ -98,8 +103,8 @@ describe('Plain formatter', () => {
 describe('json formater', () => {
   const expectedPath1 = getFixturePath('expectedJson1');
   const expected1 = fs.readFileSync(expectedPath1, 'utf-8');
-  // const expectedPath2 = getFixturePath('expectedPlain2');
-  // const expected2 = fs.readFileSync(expectedPath2, 'utf-8');
+  const expectedPath2 = getFixturePath('expectedJson2');
+  const expected2 = fs.readFileSync(expectedPath2, 'utf-8');
 
   test('json', () => {
     const firstPath = getFixturePath('json/recursiveObj1.json');
@@ -107,6 +112,15 @@ describe('json formater', () => {
 
     const actual1 = genDiff(firstPath, secondPath, 'json');
     expect(actual1).toEqual(expected1);
+
+    const actual2 = genDiff(firstPath, pathToEmpty, 'json');
+    expect(actual2).toEqual(expected2);
+
+    const actual3 = genDiff(firstPath, firstPath, 'json');
+    expect(actual3).toEqual('[{"added":{},"removed":{},"updated":{}}]');
+
+    const actual4 = genDiff(pathToEmpty, pathToEmpty, 'json');
+    expect(actual4).toEqual('{}');
   });
 
   test('yaml', () => {
@@ -115,5 +129,14 @@ describe('json formater', () => {
 
     const actual1 = genDiff(firstPath, secondPath, 'json');
     expect(actual1).toEqual(expected1);
+
+    const actual2 = genDiff(firstPath, pathToEmpty, 'json');
+    expect(actual2).toEqual(expected2);
+
+    const actual3 = genDiff(firstPath, firstPath, 'json');
+    expect(actual3).toEqual('[{"added":{},"removed":{},"updated":{}}]');
+
+    const actual4 = genDiff(pathToEmpty, pathToEmpty, 'json');
+    expect(actual4).toEqual('{}');
   });
 });

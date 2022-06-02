@@ -4,9 +4,9 @@ const json = (objectOfDifferences) => {
   const iter = (object, path = '', currentJson = [{ added: {}, removed: {}, updated: {} }]) => {
     const entries = Object.entries(object);
     const result = entries.reduce((acc, entry) => {
+      if (!Array.isArray(entry[1])) return acc;
       const [key, [location, ...values]] = entry;
       const [jsonObject] = acc;
-      console.log(jsonObject);
       const currentPath = `${path}${key}`;
 
       if (location === 'first') {
