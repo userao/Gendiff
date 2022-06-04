@@ -29,33 +29,33 @@ const stringify = (value, replacer = ' ', spacesCount = 1) => {
   return iter(value, 1);
 };
 
-const stylish = (differences) => {
+const stylish = (objectOfDifferences) => {
   const iter = (currentObject) => {
     const entries = Object.entries(currentObject);
     const formattedObject = entries
-      .reduce((acc, entry) => {
-        if (!Array.isArray(entry[1])) return { ...acc, [entry[0]]: entry[1] };
+      .reduce((differences, entry) => {
+        if (!Array.isArray(entry[1])) return { ...differences, [entry[0]]: entry[1] };
         const [key, [location, firstValue, secondValue]] = entry;
         if (location === 'first') {
-          return { ...acc, [`- ${key}`]: firstValue };
+          return { ...differences, [`- ${key}`]: firstValue };
         }
         if (location === 'second') {
-          return { ...acc, [`+ ${key}`]: firstValue };
+          return { ...differences, [`+ ${key}`]: firstValue };
         }
         if (location === 'both') {
           if (secondValue !== undefined) {
-            return { ...acc, [`- ${key}`]: firstValue, [`+ ${key}`]: secondValue };
+            return { ...differences, [`- ${key}`]: firstValue, [`+ ${key}`]: secondValue };
           }
           if (typeof firstValue === 'object') {
-            return { ...acc, [key]: iter(firstValue) };
+            return { ...differences, [key]: iter(firstValue) };
           }
         }
-        return { ...acc, [key]: firstValue };
+        return { ...differences, [key]: firstValue };
       }, {});
     return formattedObject;
   };
 
-  const result = iter(differences);
+  const result = iter(objectOfDifferences);
   return stringify(result, ' ', 4);
 };
 export default stylish;
