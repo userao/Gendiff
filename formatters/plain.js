@@ -1,6 +1,7 @@
 import _ from 'lodash';
 
 const createString = (location, path, key, values) => {
+  const currentPath = `${path}${key}`;
   const formattedValues = values.map((value) => {
     switch (typeof value) {
       case 'object':
@@ -18,12 +19,12 @@ const createString = (location, path, key, values) => {
   });
   switch (location) {
     case 'first':
-      return `Property '${path}${key}' was removed`;
+      return `Property '${currentPath}' was removed`;
     case 'second':
-      return `Property '${path}${key}' was added with value: ${formattedValues[0]}`;
+      return `Property '${currentPath}' was added with value: ${formattedValues[0]}`;
     case 'both':
       if (formattedValues.length === 2) {
-        return `Property '${path}${key}' was updated. From ${formattedValues[0]} to ${formattedValues[1]}`;
+        return `Property '${currentPath}' was updated. From ${formattedValues[0]} to ${formattedValues[1]}`;
       }
       return [];
     default:
@@ -31,8 +32,8 @@ const createString = (location, path, key, values) => {
   }
 };
 
-const plain = (objectOfDifferences) => {
-  const iter = (object, path) => {
+const plain = (differences) => {
+  const iter = (object, path = '') => {
     const entries = Object.entries(object);
     const result = entries
       .flatMap((entry) => {
@@ -46,7 +47,7 @@ const plain = (objectOfDifferences) => {
     return result;
   };
 
-  return iter(objectOfDifferences, '');
+  return iter(differences);
 };
 
 export default plain;
