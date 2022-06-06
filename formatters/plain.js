@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-const createString = (location, path, key, ...values) => {
+const createString = (location, path, key, values) => {
   const currentPath = `${path}${key}`;
   const formattedValues = values.flatMap((value) => {
     switch (typeof value) {
@@ -42,7 +42,7 @@ const plain = (differences) => {
         if (!Array.isArray(entry[1])) return [];
         const [key, [location, firstValue, secondValue]] = entry;
         if (location === 'both' && secondValue === undefined && _.isObject(firstValue)) return iter(firstValue, `${path}${key}.`);
-        return createString(location, path, key, firstValue, secondValue);
+        return createString(location, path, key, [firstValue, secondValue]);
       })
       .join('\n').trim();
 
