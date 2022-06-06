@@ -1,24 +1,27 @@
 import _ from 'lodash';
 
+const formatValue = (value) => {
+  switch (typeof value) {
+    case 'undefined':
+      return [];
+    case 'object':
+      if (value === null) return null;
+      return '[complex value]';
+    case 'number':
+      return value;
+    case 'boolean':
+      return value;
+    case 'string':
+      return `'${value}'`;
+    default:
+      throw new Error(`What are you?: ${typeof value}`);
+  }
+};
+
 const createString = (location, path, key, values) => {
   const currentPath = `${path}${key}`;
-  const formattedValues = values.flatMap((value) => {
-    switch (typeof value) {
-      case 'undefined':
-        return [];
-      case 'object':
-        if (value === null) return null;
-        return '[complex value]';
-      case 'number':
-        return value;
-      case 'boolean':
-        return value;
-      case 'string':
-        return `'${value}'`;
-      default:
-        throw new Error(`What are you?: ${typeof value}`);
-    }
-  });
+  const formattedValues = values.flatMap((value) => formatValue(value));
+
   switch (location) {
     case 'first':
       return `Property '${currentPath}' was removed`;
