@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import fs from 'fs';
-import { cwd } from 'node:process';
-import * as path from 'node:path';
+import { cwd } from 'process';
+import * as path from 'path';
 import parser from './parsers.js';
 import format from '../formatters/index.js';
 

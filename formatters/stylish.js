@@ -12,10 +12,9 @@ const stringify = (value, replacer = ' ', spacesCount = 1) => {
     const lines = Object
       .entries(currentValue)
       .map(([key, val]) => {
-        let line = `${currentIndent}${key}: ${iter(val, depth + 1)}`;
-        if (key.includes('+') || key.includes('-')) {
-          line = line.slice(2);
-        }
+        const line = (key.includes('+') || key.includes('-'))
+          ? `${currentIndent.slice(2)}${key}: ${iter(val, depth + 1)}`
+          : `${currentIndent}${key}: ${iter(val, depth + 1)}`;
         return line;
       });
 
@@ -58,4 +57,5 @@ const stylish = (differences) => {
   const result = iter(differences);
   return stringify(result, ' ', 4);
 };
+
 export default stylish;

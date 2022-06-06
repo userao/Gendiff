@@ -1,9 +1,11 @@
 import _ from 'lodash';
 
-const createString = (location, path, key, values) => {
+const createString = (location, path, key, ...values) => {
   const currentPath = `${path}${key}`;
-  const formattedValues = values.map((value) => {
+  const formattedValues = values.flatMap((value) => {
     switch (typeof value) {
+      case 'undefined':
+        return [];
       case 'object':
         if (value === null) return null;
         return '[complex value]';
@@ -38,9 +40,9 @@ const plain = (differences) => {
     const result = entries
       .flatMap((entry) => {
         if (!Array.isArray(entry[1])) return [];
-        const [key, [location, ...values]] = entry;
-        if (location === 'both' && values.length !== 2 && _.isObject(values[0])) return iter(values[0], `${path}${key}.`);
-        return createString(location, path, key, values);
+        const [key, [location, firstValue, secondValue]] = entry;
+        if (location === 'both' && secondValue === undefined && _.isObject(firstValue)) return iter(firstValue, `${path}${key}.`);
+        return createString(location, path, key, firstValue, secondValue);
       })
       .join('\n').trim();
 

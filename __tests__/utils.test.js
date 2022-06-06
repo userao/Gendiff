@@ -1,6 +1,6 @@
 import { test, expect, describe } from '@jest/globals';
 import { fileURLToPath } from 'url';
-import * as path from 'node:path';
+import * as path from 'path';
 import fs from 'fs';
 import genDiff from '../src/utils.js';
 
@@ -16,21 +16,28 @@ describe('Stylish formatter', () => {
   const expected2 = fs.readFileSync(expectedPath2, 'utf-8');
   const expectedPath3 = getFixturePath('expectedStylish3');
   const expected3 = fs.readFileSync(expectedPath3, 'utf-8');
-
   const firstPath = getFixturePath('json/recursiveObj1.json');
   const secondPath = getFixturePath('yaml/recursiveObj2.yaml');
 
-  const actual1 = genDiff(firstPath, secondPath);
-  expect(actual1).toEqual(expected1);
+  test('different objects', () => {
+    const actual1 = genDiff(firstPath, secondPath);
+    expect(actual1).toEqual(expected1);
+  });
 
-  const actual2 = genDiff(firstPath, firstPath);
-  expect(actual2).toEqual(expected2);
+  test('equal objects', () => {
+    const actual2 = genDiff(firstPath, firstPath);
+    expect(actual2).toEqual(expected2);
+  });
 
-  const actual3 = genDiff(firstPath, pathToEmpty);
-  expect(actual3).toEqual(expected3);
+  test('one of objects is empty', () => {
+    const actual3 = genDiff(firstPath, pathToEmpty);
+    expect(actual3).toEqual(expected3);
+  });
 
-  const actual4 = genDiff(pathToEmpty, pathToEmpty);
-  expect(actual4).toEqual('{}');
+  test('two empty', () => {
+    const actual4 = genDiff(pathToEmpty, pathToEmpty);
+    expect(actual4).toEqual('{}');
+  });
 });
 
 describe('Plain formatter', () => {
@@ -38,21 +45,28 @@ describe('Plain formatter', () => {
   const expected1 = fs.readFileSync(expectedPath1, 'utf-8');
   const expectedPath2 = getFixturePath('expectedPlain2');
   const expected2 = fs.readFileSync(expectedPath2, 'utf-8');
-
   const firstPath = getFixturePath('yaml/recursiveObj1.yml');
   const secondPath = getFixturePath('json/recursiveObj2.json');
 
-  const actual1 = genDiff(firstPath, secondPath, 'plain');
-  expect(actual1).toEqual(expected1);
+  test('different objects', () => {
+    const actual1 = genDiff(firstPath, secondPath, 'plain');
+    expect(actual1).toEqual(expected1);
+  });
 
-  const actual2 = genDiff(firstPath, pathToEmpty, 'plain');
-  expect(actual2).toEqual(expected2);
+  test('one of objects is empty', () => {
+    const actual2 = genDiff(firstPath, pathToEmpty, 'plain');
+    expect(actual2).toEqual(expected2);
+  });
 
-  const actual3 = genDiff(firstPath, firstPath, 'plain');
-  expect(actual3).toEqual('');
+  test('equal objects', () => {
+    const actual3 = genDiff(firstPath, firstPath, 'plain');
+    expect(actual3).toEqual('');
+  });
 
-  const actual4 = genDiff(pathToEmpty, pathToEmpty, 'palin');
-  expect(actual4).toEqual('{}');
+  test('two empty', () => {
+    const actual4 = genDiff(pathToEmpty, pathToEmpty, 'palin');
+    expect(actual4).toEqual('{}');
+  });
 });
 
 describe('json formater', () => {
@@ -60,20 +74,25 @@ describe('json formater', () => {
   const expected1 = fs.readFileSync(expectedPath1, 'utf-8');
   const expectedPath2 = getFixturePath('expectedJson2');
   const expected2 = fs.readFileSync(expectedPath2, 'utf-8');
+  const firstPath = getFixturePath('json/recursiveObj1.json');
+  const secondPath = getFixturePath('yaml/recursiveObj2.yaml');
 
-  test('json', () => {
-    const firstPath = getFixturePath('json/recursiveObj1.json');
-    const secondPath = getFixturePath('yaml/recursiveObj2.yaml');
-
+  test('different objects', () => {
     const actual1 = genDiff(firstPath, secondPath, 'json');
     expect(actual1).toEqual(expected1);
+  });
 
+  test('one of objects is empty', () => {
     const actual2 = genDiff(firstPath, pathToEmpty, 'json');
     expect(actual2).toEqual(expected2);
+  });
 
+  test('equal objects', () => {
     const actual3 = genDiff(firstPath, firstPath, 'json');
     expect(actual3).toEqual('[{"added":{},"removed":{},"updated":{}}]');
+  });
 
+  test('two empty', () => {
     const actual4 = genDiff(pathToEmpty, pathToEmpty, 'json');
     expect(actual4).toEqual('{}');
   });
