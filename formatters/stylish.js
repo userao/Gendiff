@@ -29,28 +29,34 @@ const stringify = (value, replacer = ' ', spacesCount = 1) => {
 };
 
 const stylish = (differences) => {
-  const iter = (currentObject) => {
-    const entries = Object.entries(currentObject);
-    const formattedObject = entries
-      .reduce((acc, entry) => {
-        if (!Array.isArray(entry[1])) return { ...acc, [entry[0]]: entry[1] };
-        const [key, [location, firstValue, secondValue]] = entry;
-        if (location === 'first') {
-          return { ...acc, [`- ${key}`]: firstValue };
-        }
-        if (location === 'second') {
-          return { ...acc, [`+ ${key}`]: firstValue };
-        }
-        if (location === 'both') {
-          if (secondValue !== undefined) {
-            return { ...acc, [`- ${key}`]: firstValue, [`+ ${key}`]: secondValue };
-          }
-          if (typeof firstValue === 'object') {
-            return { ...acc, [key]: iter(firstValue) };
-          }
-        }
-        return { ...acc, [key]: firstValue };
-      }, {});
+  const iter = (node) => {
+    const entries = Object.entries(node);
+    const formattedObject = entries.reduce((acc, entry) => {
+      const [key, meta] = entry;
+      const { state, values } = meta;
+
+      if (state === 'removed') {
+        return { ...acc, [`- ${key}`]: values[0] };
+      }
+
+      if (state === 'added') {
+        return { ...acc, [`+ ${key}`]: values[0] };
+      }
+
+      if (state === 'untouched') {
+        return { ...acc, [key]: values[0] };
+      }
+
+      if (state === 'updated') {
+        return { ...acc, [`- ${key}`]: values[0], [`+ ${key}`]: values[1] };
+      }
+
+      if (state === 'updated inside') {
+        return { ...acc, [key]: iter(values[0]) };
+      }
+
+      return { ...acc, [key]: values[0] };
+    }, {});
     return formattedObject;
   };
 

@@ -1,5 +1,3 @@
-import _ from 'lodash';
-
 const formatValue = (value) => {
   switch (typeof value) {
     case 'undefined':
@@ -18,22 +16,21 @@ const formatValue = (value) => {
   }
 };
 
-const createString = (location, path, key, values) => {
+const createString = (state, path, key, values) => {
   const currentPath = `${path}${key}`;
   const formattedValues = values.flatMap((value) => formatValue(value));
 
-  switch (location) {
-    case 'first':
+  switch (state) {
+    case 'removed':
       return `Property '${currentPath}' was removed`;
-    case 'second':
+    case 'added':
       return `Property '${currentPath}' was added with value: ${formattedValues[0]}`;
-    case 'both':
-      if (formattedValues.length === 2) {
-        return `Property '${currentPath}' was updated. From ${formattedValues[0]} to ${formattedValues[1]}`;
-      }
+    case 'updated':
+      return `Property '${currentPath}' was updated. From ${formattedValues[0]} to ${formattedValues[1]}`;
+    case 'untouched':
       return [];
     default:
-      throw new Error(`Wrong location: ${location}`);
+      throw new Error(`Wrong state: ${state}`);
   }
 };
 
@@ -42,10 +39,10 @@ const plain = (differences) => {
     const entries = Object.entries(object);
     const result = entries
       .flatMap((entry) => {
-        if (!Array.isArray(entry[1])) return [];
-        const [key, [location, firstValue, secondValue]] = entry;
-        if (location === 'both' && secondValue === undefined && _.isObject(firstValue)) return iter(firstValue, `${path}${key}.`);
-        return createString(location, path, key, [firstValue, secondValue]);
+        const [key, meta] = entry;
+        const { state, values } = meta;
+        if (state === 'updated inside') return iter(values[0], `${path}${key}.`);
+        return createString(state, path, key, [values[0], values[1]]);
       })
       .join('\n').trim();
 

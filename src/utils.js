@@ -1,57 +1,33 @@
-import _ from 'lodash';
 import fs from 'fs';
 import { cwd } from 'process';
 import * as path from 'path';
 import parser from './parsers.js';
-import format from '../formatters/index.js';
+import createDifferencesTree from './createDifferencesTree.js';
 
-const createObjectOfDifs = (firstObject, secondObject) => {
-  const keysOfFirst = Object.keys(firstObject);
-  const keysOfSecond = Object.keys(secondObject);
-  const allKeysSorted = _.sortBy(_.union(keysOfFirst, keysOfSecond));
-  const objOfDifs = allKeysSorted.reduce((acc, key) => {
-    const firstValue = firstObject[key];
-    const secondValue = secondObject[key];
-    if (keysOfFirst.includes(key) && keysOfSecond.includes(key)) {
-      if (_.isEqual(firstValue, secondValue)) {
-        return { ...acc, [key]: ['both', firstValue] };
-      }
-
-      if (_.isObject(firstValue) && _.isObject(secondValue)) {
-        return { ...acc, [key]: ['both', createObjectOfDifs(firstValue, secondValue)] };
-      }
-
-      return { ...acc, [key]: ['both', firstValue, secondValue] };
-    }
-
-    if (keysOfFirst.includes(key)) {
-      return { ...acc, [key]: ['first', firstValue] };
-    }
-
-    return { ...acc, [key]: ['second', secondValue] };
-  }, {});
-
-  return objOfDifs;
+const makePathAbsolute = (pathString) => {
+  const workingDir = cwd();
+  return path.resolve(workingDir, pathString);
 };
 
-const genDiff = (path1, path2, formatterType = 'stylish') => {
-  const workingDir = cwd();
-  const resolvedPath1 = path.resolve(workingDir, path1);
-  const resolvedPath2 = path.resolve(workingDir, path2);
-  const dataString1 = fs.readFileSync(resolvedPath1, 'utf-8');
-  const dataString2 = fs.readFileSync(resolvedPath2, 'utf-8');
-  const extension1 = path.extname(path1);
-  const extension2 = path.extname(path2);
+const getDataString = (pathToFile, encoding = 'utf-8') => fs.readFileSync(pathToFile, encoding);
 
-  if (dataString1 === dataString2 && dataString1 === '') {
-    return '{}';
-  }
+const getFileExtension = (pathToFile) => path.extname(pathToFile);
 
-  const object1 = dataString1 === '' ? {} : parser(dataString1, extension1);
-  const object2 = dataString2 === '' ? {} : parser(dataString2, extension2);
+const genDiff = (path1, path2) => {
+  const firstAbsolutePath = makePathAbsolute(path1);
+  const secondAbsolutePath = makePathAbsolute(path2);
 
-  const differences = createObjectOfDifs(object1, object2);
-  return format(differences, formatterType);
+  const firstDataString = getDataString(firstAbsolutePath);
+  const secondDataString = getDataString(secondAbsolutePath);
+
+  const firstFileExtension = getFileExtension(firstAbsolutePath);
+  const secondFileExtension = getFileExtension(secondAbsolutePath);
+
+  const firstObject = parser(firstDataString, firstFileExtension);
+  const secondObject = parser(secondDataString, secondFileExtension);
+
+  const differences = createDifferencesTree(firstObject, secondObject);
+  return differences;
 };
 
 export default genDiff;

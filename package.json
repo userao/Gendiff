@@ -5,9 +5,9 @@
     "lodash": "^4.17.21"
   },
   "name": "@hexlet/code",
-  "description": "[![Actions Status](https://github.com/userao/frontend-project-lvl2/workflows/hexlet-check/badge.svg)](https://github.com/userao/frontend-project-lvl2/actions)",
+  "description": "program that compares json/yaml objects and returns defferences between them ",
   "version": "1.0.0",
-  "main": "src/utils.js",
+  "main": "formatters/index.js",
   "scripts": {
     "test": "NODE_OPTIONS=--experimental-vm-modules npx jest"
   },

@@ -5,6 +5,7 @@ const parseJson = (jsonString) => JSON.parse(jsonString);
 const parseYaml = (yamlString) => yaml.load(yamlString);
 
 const parser = (dataString, extension) => {
+  if (dataString.length === 0) return {};
   switch (extension) {
     case '.yaml':
       return parseYaml(dataString);
