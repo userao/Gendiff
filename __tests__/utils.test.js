@@ -1,99 +1,40 @@
-import { test, expect, describe } from '@jest/globals';
+import { test, expect } from '@jest/globals';
 import { fileURLToPath } from 'url';
 import * as path from 'path';
 import fs from 'fs';
-import { genDiff, format } from '../formatters/index.js';
+import { genDiff, format } from '../src/formatters/index.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const getFixturePath = (filename) => path.join(__dirname, '..', '__fixtures__', filename);
+
 const pathToEmpty = getFixturePath('json/emptyObj.json');
+const firstPath = getFixturePath('json/recursiveObj1.json');
+const secondPath = getFixturePath('yaml/recursiveObj2.yaml');
 
-describe('Stylish formatter', () => {
-  const expectedPath1 = getFixturePath('expectedStylish1');
-  const expected1 = fs.readFileSync(expectedPath1, 'utf-8');
-  const expectedPath2 = getFixturePath('expectedStylish2');
-  const expected2 = fs.readFileSync(expectedPath2, 'utf-8');
-  const expectedPath3 = getFixturePath('expectedStylish3');
-  const expected3 = fs.readFileSync(expectedPath3, 'utf-8');
-  const firstPath = getFixturePath('json/recursiveObj1.json');
-  const secondPath = getFixturePath('yaml/recursiveObj2.yaml');
+const stylish = fs.readFileSync(getFixturePath('expectedStylish1'), 'utf-8');
+const plain = fs.readFileSync(getFixturePath('expectedPlain1'), 'utf-8');
+const json = fs.readFileSync(getFixturePath('expectedJson1'), 'utf-8');
+const sameStylish = fs.readFileSync(getFixturePath('expectedStylish2'), 'utf-8');
+const withEmptyStylish = fs.readFileSync(getFixturePath('expectedStylish3'), 'utf-8');
+const withEmptyPlain = fs.readFileSync(getFixturePath('expectedPlain2'), 'utf-8');
+const withEmptyJson = fs.readFileSync(getFixturePath('expectedJson2'), 'utf-8');
 
-  test('different objects', () => {
-    const actual1 = format(genDiff(firstPath, secondPath));
-    expect(actual1).toEqual(expected1);
-  });
-
-  test('equal objects', () => {
-    const actual2 = format(genDiff(firstPath, firstPath));
-    expect(actual2).toEqual(expected2);
-  });
-
-  test('one of objects is empty', () => {
-    const actual3 = format(genDiff(firstPath, pathToEmpty));
-    expect(actual3).toEqual(expected3);
-  });
-
-  test('two empty', () => {
-    const actual4 = format(genDiff(pathToEmpty, pathToEmpty));
-    expect(actual4).toEqual('{}');
-  });
-});
-
-describe('Plain formatter', () => {
-  const expectedPath1 = getFixturePath('expectedPlain1');
-  const expected1 = fs.readFileSync(expectedPath1, 'utf-8');
-  const expectedPath2 = getFixturePath('expectedPlain2');
-  const expected2 = fs.readFileSync(expectedPath2, 'utf-8');
-  const firstPath = getFixturePath('yaml/recursiveObj1.yml');
-  const secondPath = getFixturePath('json/recursiveObj2.json');
-
-  test('different objects', () => {
-    const actual1 = format(genDiff(firstPath, secondPath), 'plain');
-    expect(actual1).toEqual(expected1);
-  });
-
-  test('one of objects is empty', () => {
-    const actual2 = format(genDiff(firstPath, pathToEmpty), 'plain');
-    expect(actual2).toEqual(expected2);
-  });
-
-  test('equal objects', () => {
-    const actual3 = format(genDiff(firstPath, firstPath), 'plain');
-    expect(actual3).toEqual('');
-  });
-
-  test('two empty', () => {
-    const actual4 = format(genDiff(pathToEmpty, pathToEmpty), 'plain');
-    expect(actual4).toEqual('{}');
-  });
-});
-
-describe('json formater', () => {
-  const expectedPath1 = getFixturePath('expectedJson1');
-  const expected1 = fs.readFileSync(expectedPath1, 'utf-8');
-  const expectedPath2 = getFixturePath('expectedJson2');
-  const expected2 = fs.readFileSync(expectedPath2, 'utf-8');
-  const firstPath = getFixturePath('json/recursiveObj1.json');
-  const secondPath = getFixturePath('yaml/recursiveObj2.yaml');
-
-  test('different objects', () => {
-    const actual1 = format(genDiff(firstPath, secondPath), 'json');
-    expect(actual1).toEqual(expected1);
-  });
-
-  test('one of objects is empty', () => {
-    const actual2 = format(genDiff(firstPath, pathToEmpty), 'json');
-    expect(actual2).toEqual(expected2);
-  });
-
-  test('equal objects', () => {
-    const actual3 = format(genDiff(firstPath, firstPath), 'json');
-    expect(actual3).toEqual('[{"added":{},"removed":{},"updated":{}}]');
-  });
-
-  test('two empty', () => {
-    const actual4 = format(genDiff(pathToEmpty, pathToEmpty), 'json');
-    expect(actual4).toEqual('{}');
-  });
+test.each([
+  {
+    formater: 'stylish', expected: stylish, expectedSame: sameStylish, expectedWithEmpty: withEmptyStylish,
+  },
+  {
+    formater: 'plain', expected: plain, expectedSame: '', expectedWithEmpty: withEmptyPlain,
+  },
+  {
+    formater: 'json', expected: json, expectedSame: '[{"added":{},"removed":{},"updated":{}}]', expectedWithEmpty: withEmptyJson,
+  },
+])('genDiff', ({
+  formater, expected, expectedSame, expectedWithEmpty,
+}) => {
+  expect(format(genDiff(firstPath, secondPath), formater)).toEqual(expected);
+  expect(format(genDiff(firstPath, firstPath), formater)).toEqual(expectedSame);
+  expect(format(genDiff(firstPath, pathToEmpty), formater)).toEqual(expectedWithEmpty);
+  expect(format(genDiff(pathToEmpty, pathToEmpty), formater)).toEqual('{}');
 });

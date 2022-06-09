@@ -2,7 +2,7 @@ import _ from 'lodash';
 import json from './json.js';
 import plain from './plain.js';
 import stylish from './stylish.js';
-import genDiff from '../src/utils.js';
+import genDiff from '../utils.js';
 
 const format = (objectOfDifferences, formatter = 'stylish') => {
   if (_.isEqual(objectOfDifferences, {})) return '{}';
