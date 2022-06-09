@@ -20,5 +20,4 @@ const format = (objectOfDifferences, formatter = 'stylish') => {
   }
 };
 
-
 export { genDiff, format };
