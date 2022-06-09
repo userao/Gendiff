@@ -4,6 +4,8 @@ import plain from './plain.js';
 import stylish from './stylish.js';
 import generateDiffs from '../utils.js';
 
+const genDiff = (path1, path2) => generateDiffs(path1, path2);
+
 const format = (objectOfDifferences, formatter = 'stylish') => {
   if (_.isEqual(objectOfDifferences, {})) return '{}';
   switch (formatter) {
@@ -18,6 +20,5 @@ const format = (objectOfDifferences, formatter = 'stylish') => {
   }
 };
 
-const genDiff = (path1, path2) => generateDiffs(path1, path2);
 
 export { genDiff, format };
