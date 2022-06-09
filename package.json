@@ -7,7 +7,7 @@
   "name": "@hexlet/code",
   "description": "program that compares json/yaml objects and returns defferences between them ",
   "version": "1.0.0",
-  "main": "src/utils.js",
+  "main": "src/formatters/index.js",
   "scripts": {
     "test": "NODE_OPTIONS=--experimental-vm-modules npx jest"
   },

@@ -2,9 +2,6 @@ import _ from 'lodash';
 import json from './json.js';
 import plain from './plain.js';
 import stylish from './stylish.js';
-import generateDiffs from '../utils.js';
-
-const genDiff = (path1, path2) => generateDiffs(path1, path2);
 
 const format = (objectOfDifferences, formatter = 'stylish') => {
   if (_.isEqual(objectOfDifferences, {})) return '{}';
@@ -20,4 +17,5 @@ const format = (objectOfDifferences, formatter = 'stylish') => {
   }
 };
 
-export { genDiff, format };
+export { default as genDiff } from '../utils.js';
+export { format };
