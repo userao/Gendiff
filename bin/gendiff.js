@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { program } from 'commander';
-import { genDiff, format } from '../formatters/index.js';
+import { genDiff, format } from '../src/formatters/index.js';
 
 program
   .argument('<filepath1>')
