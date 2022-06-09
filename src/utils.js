@@ -3,6 +3,7 @@ import { cwd } from 'process';
 import * as path from 'path';
 import parser from './parsers.js';
 import createDifferencesTree from './createDifferencesTree.js';
+import format from './formatters/index.js';
 
 const makePathAbsolute = (pathString) => {
   const workingDir = cwd();
@@ -13,7 +14,7 @@ const getDataString = (pathToFile, encoding = 'utf-8') => fs.readFileSync(pathTo
 
 const getFileExtension = (pathToFile) => path.extname(pathToFile);
 
-const genDiff = (path1, path2) => {
+const genDiff = (path1, path2, formater = 'stylish') => {
   const firstAbsolutePath = makePathAbsolute(path1);
   const secondAbsolutePath = makePathAbsolute(path2);
 
@@ -27,7 +28,7 @@ const genDiff = (path1, path2) => {
   const secondObject = parser(secondDataString, secondFileExtension);
 
   const differences = createDifferencesTree(firstObject, secondObject);
-  return differences;
+  return format(differences, formater);
 };
 
 export default genDiff;

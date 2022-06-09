@@ -3,7 +3,7 @@ import json from './json.js';
 import plain from './plain.js';
 import stylish from './stylish.js';
 
-const format = (objectOfDifferences, formatter = 'stylish') => {
+const format = (objectOfDifferences, formatter) => {
   if (_.isEqual(objectOfDifferences, {})) return '{}';
   switch (formatter) {
     case 'stylish':
@@ -17,5 +17,4 @@ const format = (objectOfDifferences, formatter = 'stylish') => {
   }
 };
 
-export { default as genDiff } from '../utils.js';
-export { format };
+export default format;

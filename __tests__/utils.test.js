@@ -2,7 +2,7 @@ import { test, expect } from '@jest/globals';
 import { fileURLToPath } from 'url';
 import * as path from 'path';
 import fs from 'fs';
-import { genDiff, format } from '../src/formatters/index.js';
+import genDiff from '../src/utils.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -33,8 +33,8 @@ test.each([
 ])('genDiff', ({
   formater, expected, expectedSame, expectedWithEmpty,
 }) => {
-  expect(format(genDiff(firstPath, secondPath), formater)).toEqual(expected);
-  expect(format(genDiff(firstPath, firstPath), formater)).toEqual(expectedSame);
-  expect(format(genDiff(firstPath, pathToEmpty), formater)).toEqual(expectedWithEmpty);
-  expect(format(genDiff(pathToEmpty, pathToEmpty), formater)).toEqual('{}');
+  expect(genDiff(firstPath, secondPath, formater)).toEqual(expected);
+  expect(genDiff(firstPath, firstPath, formater)).toEqual(expectedSame);
+  expect(genDiff(firstPath, pathToEmpty, formater)).toEqual(expectedWithEmpty);
+  expect(genDiff(pathToEmpty, pathToEmpty, formater)).toEqual('{}');
 });
