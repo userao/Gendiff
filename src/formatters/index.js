@@ -2,7 +2,7 @@ import _ from 'lodash';
 import json from './json.js';
 import plain from './plain.js';
 import stylish from './stylish.js';
-import genDiff from '../utils.js';
+import generateDiffs from '../utils.js';
 
 const format = (objectOfDifferences, formatter = 'stylish') => {
   if (_.isEqual(objectOfDifferences, {})) return '{}';
@@ -17,5 +17,7 @@ const format = (objectOfDifferences, formatter = 'stylish') => {
       throw new Error(`Unexpected formatter type: ${formatter}`);
   }
 };
+
+const genDiff = (path1, path2) => generateDiffs(path1, path2);
 
 export { genDiff, format };

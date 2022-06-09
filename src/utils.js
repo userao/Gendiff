@@ -13,7 +13,7 @@ const getDataString = (pathToFile, encoding = 'utf-8') => fs.readFileSync(pathTo
 
 const getFileExtension = (pathToFile) => path.extname(pathToFile);
 
-const genDiff = (path1, path2) => {
+export default (path1, path2) => {
   const firstAbsolutePath = makePathAbsolute(path1);
   const secondAbsolutePath = makePathAbsolute(path2);
 
@@ -29,5 +29,3 @@ const genDiff = (path1, path2) => {
   const differences = createDifferencesTree(firstObject, secondObject);
   return differences;
 };
-
-export default genDiff;
