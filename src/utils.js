@@ -1,7 +1,7 @@
 import fs from 'fs';
 import { cwd } from 'process';
 import * as path from 'path';
-import parser from './parsers.js';
+import parse from './parsers.js';
 import createDifferencesTree from './createDifferencesTree.js';
 import format from './formatters/index.js';
 
@@ -24,8 +24,8 @@ const genDiff = (path1, path2, formater = 'stylish') => {
   const firstFileExtension = getFileExtension(firstAbsolutePath);
   const secondFileExtension = getFileExtension(secondAbsolutePath);
 
-  const firstObject = parser(firstDataString, firstFileExtension);
-  const secondObject = parser(secondDataString, secondFileExtension);
+  const firstObject = parse(firstDataString, firstFileExtension);
+  const secondObject = parse(secondDataString, secondFileExtension);
 
   const differences = createDifferencesTree(firstObject, secondObject);
   return format(differences, formater);

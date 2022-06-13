@@ -30,32 +30,21 @@ const stringify = (value, replacer = ' ', spacesCount = 1) => {
 
 const stylish = (differences) => {
   const iter = (node) => {
-    const entries = Object.entries(node);
-    const formattedObject = entries.reduce((acc, entry) => {
-      const [key, meta] = entry;
-      const { state, values } = meta;
-
-      if (state === 'removed') {
-        return { ...acc, [`- ${key}`]: values[0] };
+    const formattedObject = node.reduce((acc, leaf) => {
+      const { key, state } = leaf;
+      if (state === 'nested') {
+        const { children } = leaf;
+        return { ...acc, [key]: iter(children) };
       }
-
-      if (state === 'added') {
-        return { ...acc, [`+ ${key}`]: values[0] };
+      if (state === 'changed') {
+        const { from, to } = leaf;
+        return { ...acc, [`- ${key}`]: from, [`+ ${key}`]: to };
       }
-
-      if (state === 'untouched') {
-        return { ...acc, [key]: values[0] };
+      const { value } = leaf;
+      if (state === 'added' || state === 'removed') {
+        return state === 'added' ? { ...acc, [`+ ${key}`]: value } : { ...acc, [`- ${key}`]: value };
       }
-
-      if (state === 'updated') {
-        return { ...acc, [`- ${key}`]: values[0], [`+ ${key}`]: values[1] };
-      }
-
-      if (state === 'updated inside') {
-        return { ...acc, [key]: iter(values[0]) };
-      }
-
-      return { ...acc, [key]: values[0] };
+      return { ...acc, [key]: value };
     }, {});
     return formattedObject;
   };

@@ -1,36 +1,26 @@
 import _ from 'lodash';
 
 const json = (differences) => {
-  const iter = (node, path = '', currentJson = [{ added: {}, removed: {}, updated: {} }]) => {
-    const entries = Object.entries(node);
-    return entries.reduce((acc, entry) => {
-      const [key, meta] = entry;
-      const { state, values } = meta;
-      const [jsonObject] = acc;
-      const currentPath = `${path}${key}`;
+  const iter = (node, path = '', currentJson = [{ added: {}, removed: {}, updated: {} }]) => node.reduce((acc, leaf) => {
+    const { key, state } = leaf;
+    const currentPath = `${path}${key}`;
+    const [jsonObject] = acc;
 
-      switch (state) {
-        case 'removed':
-          _.set(jsonObject.removed, currentPath, values[0]);
-          break;
-        case 'added':
-          _.set(jsonObject.added, currentPath, values[0]);
-          break;
-        case 'updated':
-          _.set(jsonObject.updated, `${currentPath}.from`, values[0]);
-          _.set(jsonObject.updated, `${currentPath}.to`, values[1]);
-          break;
-        case 'updated inside':
-          return iter(values[0], `${currentPath}.`, [jsonObject]);
-        case 'untouched':
-          return acc;
-        default:
-          throw new Error(`Wrong state: ${state}`);
-      }
-
-      return [jsonObject];
-    }, currentJson);
-  };
+    if (state === 'added' || state === 'removed') {
+      const { value } = leaf;
+      _.set(jsonObject[state], currentPath, value);
+    }
+    if (state === 'changed') {
+      const { from, to } = leaf;
+      _.set(jsonObject.updated, `${currentPath}.from`, from);
+      _.set(jsonObject.updated, `${currentPath}.to`, to);
+    }
+    if (state === 'nested') {
+      const { children } = leaf;
+      return iter(children, `${currentPath}.`, [jsonObject]);
+    }
+    return acc;
+  }, currentJson);
 
   return JSON.stringify(iter(differences));
 };

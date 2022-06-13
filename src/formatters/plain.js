@@ -1,7 +1,5 @@
 const formatValue = (value) => {
   switch (typeof value) {
-    case 'undefined':
-      return [];
     case 'object':
       if (value === null) return null;
       return '[complex value]';
@@ -16,38 +14,32 @@ const formatValue = (value) => {
   }
 };
 
-const createString = (state, path, key, values) => {
+const createString = (leaf, path) => {
+  const { key, state } = leaf;
   const currentPath = `${path}${key}`;
-  const formattedValues = values.flatMap((value) => formatValue(value));
-
-  switch (state) {
-    case 'removed':
-      return `Property '${currentPath}' was removed`;
-    case 'added':
-      return `Property '${currentPath}' was added with value: ${formattedValues[0]}`;
-    case 'updated':
-      return `Property '${currentPath}' was updated. From ${formattedValues[0]} to ${formattedValues[1]}`;
-    case 'untouched':
-      return [];
-    default:
-      throw new Error(`Wrong state: ${state}`);
+  if (state === 'unchanged') return [];
+  if (state === 'changed') {
+    const { from, to } = leaf;
+    return `Property '${currentPath}' was updated. From ${formatValue(from)} to ${formatValue(to)}`;
   }
+  if (state === 'added') {
+    const { value } = leaf;
+    return `Property '${currentPath}' was added with value: ${formatValue(value)}`;
+  }
+  return `Property '${currentPath}' was removed`;
 };
 
 const plain = (differences) => {
-  const iter = (object, path = '') => {
-    const entries = Object.entries(object);
-    const result = entries
-      .flatMap((entry) => {
-        const [key, meta] = entry;
-        const { state, values } = meta;
-        if (state === 'updated inside') return iter(values[0], `${path}${key}.`);
-        return createString(state, path, key, [values[0], values[1]]);
-      })
-      .join('\n').trim();
-
-    return result;
-  };
+  const iter = (node, path = '') => node.flatMap((leaf) => {
+    const { key, state } = leaf;
+    if (state === 'nested') {
+      const { children } = leaf;
+      return iter(children, `${path}${key}.`);
+    }
+    return createString(leaf, path);
+  })
+    .join('\n')
+    .trim();
 
   return iter(differences);
 };
