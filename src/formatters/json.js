@@ -1,6 +1,7 @@
 import _ from 'lodash';
 
 const json = (differences) => {
+  if (_.isEqual(differences, {})) return '{}';
   const iter = (node, path = '', currentJson = [{ added: {}, removed: {}, updated: {} }]) => node.reduce((acc, leaf) => {
     const { key, state } = leaf;
     const currentPath = `${path}${key}`;

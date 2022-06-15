@@ -1,4 +1,6 @@
-const formatValue = (value) => {
+import _ from 'lodash';
+
+const stringify = (value) => {
   switch (typeof value) {
     case 'object':
       if (value === null) return null;
@@ -10,7 +12,7 @@ const formatValue = (value) => {
     case 'string':
       return `'${value}'`;
     default:
-      throw new Error(`What are you?: ${typeof value}`);
+      return value.toString();
   }
 };
 
@@ -20,16 +22,17 @@ const createString = (leaf, path) => {
   if (state === 'unchanged') return [];
   if (state === 'changed') {
     const { from, to } = leaf;
-    return `Property '${currentPath}' was updated. From ${formatValue(from)} to ${formatValue(to)}`;
+    return `Property '${currentPath}' was updated. From ${stringify(from)} to ${stringify(to)}`;
   }
   if (state === 'added') {
     const { value } = leaf;
-    return `Property '${currentPath}' was added with value: ${formatValue(value)}`;
+    return `Property '${currentPath}' was added with value: ${stringify(value)}`;
   }
   return `Property '${currentPath}' was removed`;
 };
 
 const plain = (differences) => {
+  if (_.isEqual(differences, {})) return '{}';
   const iter = (node, path = '') => node.flatMap((leaf) => {
     const { key, state } = leaf;
     if (state === 'nested') {

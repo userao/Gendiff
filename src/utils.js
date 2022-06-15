@@ -5,29 +5,29 @@ import parse from './parsers.js';
 import createDifferencesTree from './createDifferencesTree.js';
 import format from './formatters/index.js';
 
-const makePathAbsolute = (pathString) => {
+const makeAbsolutPath = (pathString) => {
   const workingDir = cwd();
   return path.resolve(workingDir, pathString);
 };
 
-const getDataString = (pathToFile, encoding = 'utf-8') => fs.readFileSync(pathToFile, encoding);
+const getData = (pathToFile, encoding = 'utf-8') => fs.readFileSync(pathToFile, encoding);
 
-const getFileExtension = (pathToFile) => path.extname(pathToFile);
+const getFileFormat = (pathToFile) => path.extname(pathToFile).slice(1);
 
 const genDiff = (path1, path2, formater = 'stylish') => {
-  const firstAbsolutePath = makePathAbsolute(path1);
-  const secondAbsolutePath = makePathAbsolute(path2);
+  const absolutePath1 = makeAbsolutPath(path1);
+  const absolutePath2 = makeAbsolutPath(path2);
 
-  const firstDataString = getDataString(firstAbsolutePath);
-  const secondDataString = getDataString(secondAbsolutePath);
+  const data1 = getData(absolutePath1);
+  const data2 = getData(absolutePath2);
 
-  const firstFileExtension = getFileExtension(firstAbsolutePath);
-  const secondFileExtension = getFileExtension(secondAbsolutePath);
+  const format1 = getFileFormat(absolutePath1);
+  const format2 = getFileFormat(absolutePath2);
 
-  const firstObject = parse(firstDataString, firstFileExtension);
-  const secondObject = parse(secondDataString, secondFileExtension);
+  const object1 = parse(data1, format1);
+  const object2 = parse(data2, format2);
 
-  const differences = createDifferencesTree(firstObject, secondObject);
+  const differences = createDifferencesTree(object1, object2);
   return format(differences, formater);
 };
 

@@ -1,19 +1,13 @@
 import yaml from 'js-yaml';
 
-const parseJson = JSON.parse;
-
-const parseYaml = yaml.load;
-
-const parse = (dataString, extension) => {
-  if (dataString === '') throw new Error('Empty string');
-  const format = extension.slice(1);
+const parse = (dataString, format) => {
   switch (format) {
     case 'yaml':
-      return parseYaml(dataString);
+      return yaml.load(dataString);
     case 'yml':
-      return parseYaml(dataString);
+      return yaml.load(dataString);
     case 'json':
-      return parseJson(dataString);
+      return JSON.parse(dataString);
     default:
       throw Error(`Unsupported extension: ${format}`);
   }

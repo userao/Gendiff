@@ -1,10 +1,9 @@
-import _ from 'lodash';
+// import _ from 'lodash';
 import json from './json.js';
 import plain from './plain.js';
 import stylish from './stylish.js';
 
 const format = (objectOfDifferences, formatter) => {
-  if (_.isEqual(objectOfDifferences, {})) return '{}';
   switch (formatter) {
     case 'stylish':
       return stylish(objectOfDifferences);

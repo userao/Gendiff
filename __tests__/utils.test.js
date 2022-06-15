@@ -14,21 +14,26 @@ const readFile = (filename) => {
 
 test.each([
   {
-    formatter: 'stylish', expectedSame: readFile('stylishResultSame'),
+    extension: 'json',
   },
   {
-    formatter: 'plain', expectedSame: '',
-  },
-  {
-    formatter: 'json', expectedSame: '[{"added":{},"removed":{},"updated":{}}]',
+    extension: 'yaml',
   },
 ])('genDiff', ({
-  formatter, expectedSame,
+  extension,
 }) => {
-  const firstPath = getFixturePath('recursive1.json');
-  const secondPath = getFixturePath('recursive2.yaml');
-  const expected = readFile(`${formatter}Result`);
+  const firstPath = getFixturePath(`file1.${extension}`);
+  const secondPath = getFixturePath(`file2.${extension}`);
 
-  expect(genDiff(firstPath, secondPath, formatter)).toEqual(expected);
-  expect(genDiff(firstPath, firstPath, formatter)).toEqual(expectedSame);
+  const actualStylish = genDiff(firstPath, secondPath);
+  const expectedStylish = readFile('stylishResult');
+  expect(actualStylish).toEqual(expectedStylish);
+
+  const actualPlain = genDiff(firstPath, secondPath, 'plain');
+  const expectedPlain = readFile('plainResult');
+  expect(actualPlain).toEqual(expectedPlain);
+
+  const actualJson = genDiff(firstPath, secondPath, 'json');
+  const expectedJson = readFile('jsonResult');
+  expect(actualJson).toEqual(expectedJson);
 });
