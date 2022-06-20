@@ -1,14 +1,8 @@
-import _ from 'lodash';
-
 const stringify = (value) => {
   switch (typeof value) {
     case 'object':
       if (value === null) return null;
       return '[complex value]';
-    case 'number':
-      return value;
-    case 'boolean':
-      return value;
     case 'string':
       return `'${value}'`;
     default:
@@ -17,7 +11,6 @@ const stringify = (value) => {
 };
 
 const plain = (differences) => {
-  if (_.isEqual(differences, {})) return '{}';
   const iter = (node, path = '') => node.flatMap((leaf) => {
     const { key, state, children } = leaf;
     const currentPath = `${path}${key}`;
@@ -37,8 +30,7 @@ const plain = (differences) => {
         throw new Error(`Unknown state: ${state}`);
     }
   })
-    .join('\n')
-    .trim();
+    .join('\n');
 
   return iter(differences);
 };

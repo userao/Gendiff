@@ -14,26 +14,20 @@ const readFile = (filename) => {
 
 test.each([
   {
-    extension: 'json',
+    formatter: 'stylish', format1: 'json', format2: 'yaml',
   },
   {
-    extension: 'yaml',
+    formatter: 'plain', format1: 'yaml', format2: 'yaml',
+  },
+  {
+    formatter: 'json', format1: 'json', format2: 'json',
   },
 ])('genDiff', ({
-  extension,
+  formatter, format1, format2,
 }) => {
-  const firstPath = getFixturePath(`file1.${extension}`);
-  const secondPath = getFixturePath(`file2.${extension}`);
+  const firstPath = getFixturePath(`file1.${format1}`);
+  const secondPath = getFixturePath(`file2.${format2}`);
+  const expected = readFile(`${formatter}Result`);
 
-  const actualStylish = genDiff(firstPath, secondPath);
-  const expectedStylish = readFile('stylishResult');
-  expect(actualStylish).toEqual(expectedStylish);
-
-  const actualPlain = genDiff(firstPath, secondPath, 'plain');
-  const expectedPlain = readFile('plainResult');
-  expect(actualPlain).toEqual(expectedPlain);
-
-  const actualJson = genDiff(firstPath, secondPath, 'json');
-  const expectedJson = readFile('jsonResult');
-  expect(actualJson).toEqual(expectedJson);
+  expect(genDiff(firstPath, secondPath, formatter)).toEqual(expected);
 });
